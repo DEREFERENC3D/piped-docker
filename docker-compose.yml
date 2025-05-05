@@ -4,9 +4,10 @@ services:
         restart: unless-stopped
         depends_on:
             - piped
-        environment:
-            BACKEND_HOSTNAME: pipedapi.kavin.rocks
-            HTTP_MODE: https
+        env_file:
+            - frontend.env
+            - path: frontend.env.local
+              required: false
         ports:
             - "8080:80"
         container_name: piped-frontend
@@ -39,8 +40,8 @@ services:
         restart: unless-stopped
         volumes:
             - ./data/db:/var/lib/postgresql/data
-        environment:
-            - POSTGRES_DB=piped
-            - POSTGRES_USER=piped
-            - POSTGRES_PASSWORD=changeme
+        env_file:
+            - postgres.env
+            - path: postgres.env.local
+              required: false
         container_name: piped-postgres

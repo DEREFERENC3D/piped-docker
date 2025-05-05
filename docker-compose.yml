@@ -5,8 +5,8 @@ services:
         depends_on:
             - piped
         environment:
-            BACKEND_HOSTNAME: BACKEND_HOSTNAME_PLACEHOLDER
-            HTTP_MODE: HTTP_MODE_PLACEHOLDER
+            BACKEND_HOSTNAME: pipedapi.kavin.rocks
+            HTTP_MODE: https
         ports:
             - "8080:80"
         container_name: piped-frontend
@@ -15,7 +15,7 @@ services:
         image: 1337kavin/piped:latest
         restart: unless-stopped
         volumes:
-            - ./config/config.properties:/app/config.properties:ro
+            - ./config.properties:/app/config.properties:ro
         depends_on:
             - postgres
         ports:

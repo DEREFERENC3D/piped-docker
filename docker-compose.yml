@@ -1,6 +1,6 @@
 services:
     frontend:
-        image: 1337kavin/piped-frontend:latest
+        image: piped-frontend:latest
         restart: unless-stopped
         depends_on:
             - piped
@@ -12,7 +12,7 @@ services:
         container_name: piped-frontend
 
     piped:
-        image: 1337kavin/piped:latest
+        image: piped:latest
         restart: unless-stopped
         volumes:
             - ./config.properties:/app/config.properties:ro
@@ -23,14 +23,14 @@ services:
         container_name: piped-backend
 
     proxy:
-        image: 1337kavin/piped-proxy:latest
+        image: piped-proxy:latest
         restart: unless-stopped
         ports:
             - "8082:8080"
         container_name: piped-proxy
 
     bg-helper:
-        image: 1337kavin/bg-helper-server:latest
+        image: bg-helper-server:latest
         restart: unless-stopped
         container_name: piped-bg-helper
 

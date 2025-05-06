@@ -58,6 +58,14 @@ jobs:
       - name: Fix Dockerfile for proxy image
         if: matrix.package.image == 'piped-proxy'
         run: sed -i 's|--mount=type=cache,target=|--mount=type=cache,sharing=locked,target=|' Dockerfile
+      - name: Checkout this repository for frontend patches
+        if: matrix.package.image == 'piped-frontend'
+        uses: actions/checkout@v4
+        with:
+          path: piped-docker
+      - name: Apply frontend patches
+        if: matrix.package.image == 'piped-frontend'
+        run: git apply piped-docker/patches/frontend/*.patch
       - name: Build and push
         uses: docker/build-push-action@v6
         with:

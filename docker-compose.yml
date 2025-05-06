@@ -9,7 +9,7 @@ services:
             - path: frontend.env.local
               required: false
         ports:
-            - "8080:80"
+            - "8080:8080"
         container_name: piped-frontend
 
     piped:

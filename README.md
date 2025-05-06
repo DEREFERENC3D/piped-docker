@@ -23,7 +23,14 @@ The configuration for the backend is stored in `config.properties`. Make sure to
 
 The frontend is only configured using environment variables. The compose sets up the container to read them from `frontend.env` (default config) and `frontend.env.local` - instance-specific config, for you to create and override the default values with.
 
-Once again, the only required change is the hostname of the backend server (`BACKEND_HOSTNAME`). If the backend server should be contacted over HTTP (rather than HTTPS), also set `HTTP_MODE=http`.
+Once again, the only required change is the URLs, but in this case of all services:
+
+* `BASE_URL` should point to itself (the `frontend` service),
+	* For example, for a reverse proxy server on running on `https://kavin.rocks` with a route `/piped/` proxying the request to the `frontend` container, set `BASE_URL=https://kavin.rocks/piped`
+	* For a reverse proxy sending all requests for domain `piped.kavin.rocks` to the container set `BASE_URL=https://piped.kavin.rocks`
+* `BACKEND_URL` should point to the `piped` (backend) service, as above, full URLs are required and the service may be accessible on a subpath (e.g. `/piped-backend`) rather than on the root (`/`),
+* `PROXY_URL` should point to the `proxy` service,
+* (optional) `INSTANCES_URL` should point to a service providing the list of public instances (not included in the compose, default should work fine).
 
 ### Postgres (optional)
 

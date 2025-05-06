@@ -3,7 +3,10 @@
 This repository contains a compose file for running an instance of Piped, based on the [official version](https://github.com/TeamPiped/Piped-Docker). Changes from upstream:
 
 * Removed reverse proxy configs,
-* Moved configuration to `env_files`, removed the configure script.
+* Moved configuration to `env_files`, removed the configure script,
+* Added personal patches - permissions fix for running [in Podman on Openwrt](https://github.com/DEREFERENC3D/piped-docker/tree/openwrt) and ability to host subservices on the same domain with different base URLs.
+
+This configuration requires the use of [custom Piped builds](https://github.com/DEREFERENC3D?tab=packages&repo_name=piped-docker) from this repo. For a configuration compatible with official images, check out the [`no-patches` branch](https://github.com/DEREFERENC3D/piped-docker/tree/no-patches).
 
 # Running - configuration
 

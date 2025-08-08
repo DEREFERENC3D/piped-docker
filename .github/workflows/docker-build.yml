@@ -66,6 +66,9 @@ jobs:
       - name: Apply frontend patches
         if: matrix.package.image == 'piped-frontend'
         run: git apply piped-docker/patches/frontend/*.patch
+      - name: Fix piped-proxy's dependency
+        if: matrix.package.image == 'piped-proxy'
+        run: sed -i '/libwebp-sys/s/version = "0.13.0"/version = "0.12.0"/' Cargo.toml && rm Cargo.lock
       - name: Build and push
         uses: docker/build-push-action@v6
         with:

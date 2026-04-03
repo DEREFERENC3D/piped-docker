@@ -119,14 +119,14 @@ diff --git a/vite.config.js b/vite.config.js
 index 3b455b09..8b27f0df 100644
 --- a/vite.config.js
 +++ b/vite.config.js
-@@ -9,6 +9,7 @@ import eslintPlugin from "vite-plugin-eslint";
+@@ -12,6 +12,7 @@ import eslintPlugin from "vite-plugin-eslint";
  
  // https://vitejs.dev/config/
  export default defineConfig({
 +    base: 'BASE_URL_GOES_HERE',
      plugins: [
          vue(),
-         Unocss(),
+         tailwindcss(),
 -- 
 2.49.0
 

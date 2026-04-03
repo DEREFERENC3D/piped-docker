@@ -66,6 +66,9 @@ jobs:
       - name: Apply frontend patches
         if: matrix.package.image == 'piped-frontend'
         run: git apply piped-docker/patches/frontend/*.patch
+      - name: '[frontend] Disable linter'
+        if: matrix.package.image == 'piped-frontend'
+        run: sed -i '/eslint/d' vite.config.js
       - name: Build and push
         uses: docker/build-push-action@v6
         with:

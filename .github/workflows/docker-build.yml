@@ -6,6 +6,7 @@ on:
   # build nightlies - at midnight every day
   schedule:
     - cron: '0 0 * * *'
+      timezone: 'Europe/Warsaw'
 
 env:
   REGISTRY: ghcr.io

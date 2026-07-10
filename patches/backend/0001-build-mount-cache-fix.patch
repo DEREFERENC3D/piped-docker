@@ -1,0 +1,38 @@
+From 78c8ce8fe38277dc79c7dfd014ebe40075b9c786 Mon Sep 17 00:00:00 2001
+From: DEREFERENC3D <DEREFERENC3D@protonmail.com>
+Date: Sat, 11 Jul 2026 01:03:34 +0200
+Subject: [PATCH 1/1] Dockerfile: Assign arch-dependent IDs for each cache
+ mount
+
+Fixes mount cache corruption between builds for different architectures.
+---
+ Dockerfile | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/Dockerfile b/Dockerfile
+index 039a721..e73d9d6 100644
+--- a/Dockerfile
++++ b/Dockerfile
+@@ -1,15 +1,17 @@
+ FROM eclipse-temurin:21-jdk AS build
+ 
++ARG TARGETARCH
++
+ WORKDIR /app/
+ 
+ COPY . /app/
+ 
+-RUN --mount=type=cache,target=/root/.gradle/caches/ \
++RUN --mount=type=cache,id=gradle-${TARGETARCH},target=/root/.gradle/caches/ \
+  ./gradlew shadowJar
+ 
+ FROM eclipse-temurin:21-jre
+ 
+-RUN --mount=type=cache,target=/var/cache/apt/ \
++RUN --mount=type=cache,id=apt-${TARGETARCH},target=/var/cache/apt/ \
+  apt-get update && \
+  apt-get install -y --no-install-recommends \
+   curl \
+-- 
+2.55.0
+

@@ -57,7 +57,7 @@ jobs:
         if: matrix.package.image == 'piped-backend'
         run: sed -i '/COPY VERSION/d' Dockerfile
       - name: Checkout this repository for patches
-        if: matrix.package.image == 'piped-frontend' || matrix.package.image == 'piped-proxy'
+        if: matrix.package.image != 'bg-helper-server'
         uses: actions/checkout@v4
         with:
           path: piped-docker
@@ -67,6 +67,9 @@ jobs:
       - name: Apply proxy patches
         if: matrix.package.image == 'piped-proxy'
         run: git apply piped-docker/patches/proxy/*.patch
+      - name: Apply backend patches
+        if: matrix.package.image == 'piped-backend'
+        run: git apply piped-docker/patches/backend/*.patch
       - name: '[frontend] Disable linter'
         if: matrix.package.image == 'piped-frontend'
         run: sed -i '/eslint/d' vite.config.js

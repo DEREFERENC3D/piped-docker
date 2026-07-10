@@ -1,0 +1,41 @@
+From d1c581e7b9f0eec2184e77e472f6384ee7b478b1 Mon Sep 17 00:00:00 2001
+From: DEREFERENC3D <DEREFERENC3D@protonmail.com>
+Date: Fri, 10 Jul 2026 14:42:17 +0200
+Subject: [PATCH 1/1] Dockerfile: Assign arch-dependent IDs for each cache
+ mount
+
+Fixes mount cache corruption between builds for different architectures.
+---
+ Dockerfile | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/Dockerfile b/Dockerfile
+index 40ebde0f..9712ff7e 100644
+--- a/Dockerfile
++++ b/Dockerfile
+@@ -1,8 +1,10 @@
+ FROM node:lts-alpine AS build
+ 
++ARG TARGETARCH
++
+ WORKDIR /app/
+ 
+-RUN --mount=type=cache,target=/var/cache/apk \
++RUN --mount=type=cache,id=apk-${TARGETARCH},target=/var/cache/apk \
+     apk add --no-cache \
+     curl
+ 
+@@ -10,8 +12,8 @@ COPY . .
+ 
+ RUN corepack enable && corepack prepare pnpm@latest --activate
+ 
+-RUN --mount=type=cache,target=/root/.local/share/pnpm \
+-    --mount=type=cache,target=/app/node_modules \
++RUN --mount=type=cache,id=pnpm-store-${TARGETARCH},target=/root/.local/share/pnpm \
++    --mount=type=cache,id=node_modules-${TARGETARCH},target=/app/node_modules \
+     pnpm install --prefer-offline && \
+     env \
+         VITE_PIPED_API=API_URL_GOES_HERE \
+-- 
+2.55.0
+

@@ -1,0 +1,47 @@
+From e650ba35675f3dd6b9950b1d310bb39c3bb7a528 Mon Sep 17 00:00:00 2001
+From: DEREFERENC3D <DEREFERENC3D@protonmail.com>
+Date: Fri, 10 Jul 2026 17:40:49 +0200
+Subject: [PATCH 1/1] Dockerfile: Assign arch-dependent IDs for each cache
+
+Fixes mount cache corruption between builds for different architectures.
+---
+ Dockerfile | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/Dockerfile b/Dockerfile
+index 0a6c07e..e8ee63f 100644
+--- a/Dockerfile
++++ b/Dockerfile
+@@ -1,23 +1,25 @@
+ FROM rust:slim as BUILD
+ 
++ARG TARGETARCH
++
+ WORKDIR /app/
+ 
+ COPY . .
+ 
+-RUN --mount=type=cache,target=/var/cache/apt \
++RUN --mount=type=cache,id=apt-${TARGETARCH},target=/var/cache/apt \
+     apt-get update && \
+     apt-get install -y --no-install-recommends \
+     nasm && \
+     rm -rf /var/lib/apt/lists/*
+ 
+-RUN --mount=type=cache,target=/usr/local/cargo/registry \
+-    --mount=type=cache,target=/app/target/   \
++RUN --mount=type=cache,id=cargo-registry-${TARGETARCH},target=/usr/local/cargo/registry \
++    --mount=type=cache,id=cargo-build-${TARGETARCH},target=/app/target/   \
+     cargo build --release && \
+     mv target/release/piped-proxy .
+ 
+ FROM debian:stable-slim
+ 
+-RUN --mount=type=cache,target=/var/cache/apt \
++RUN --mount=type=cache,id=apt-${TARGETARCH},target=/var/cache/apt \
+     apt-get update && \
+     apt-get install -y --no-install-recommends \
+     ca-certificates && \
+-- 
+2.55.0
+

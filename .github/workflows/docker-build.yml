@@ -56,17 +56,17 @@ jobs:
       - name: Fix Dockerfile for backend image
         if: matrix.package.image == 'piped-backend'
         run: sed -i '/COPY VERSION/d' Dockerfile
-      - name: Fix Dockerfile for proxy image
-        if: matrix.package.image == 'piped-proxy'
-        run: sed -i 's|--mount=type=cache,target=|--mount=type=cache,sharing=locked,target=|' Dockerfile
-      - name: Checkout this repository for frontend patches
-        if: matrix.package.image == 'piped-frontend'
+      - name: Checkout this repository for patches
+        if: matrix.package.image == 'piped-frontend' || matrix.package.image == 'piped-proxy'
         uses: actions/checkout@v4
         with:
           path: piped-docker
       - name: Apply frontend patches
         if: matrix.package.image == 'piped-frontend'
         run: git apply piped-docker/patches/frontend/*.patch
+      - name: Apply proxy patches
+        if: matrix.package.image == 'piped-proxy'
+        run: git apply piped-docker/patches/proxy/*.patch
       - name: '[frontend] Disable linter'
         if: matrix.package.image == 'piped-frontend'
         run: sed -i '/eslint/d' vite.config.js
